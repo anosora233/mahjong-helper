@@ -3,12 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/EndlessCheng/mahjong-helper/util"
-	"github.com/EndlessCheng/mahjong-helper/util/model"
-	"github.com/fatih/color"
 	"math/rand"
 	"strings"
 	"time"
+
+	"github.com/EndlessCheng/mahjong-helper/util"
+	"github.com/EndlessCheng/mahjong-helper/util/model"
+	"github.com/fatih/color"
 )
 
 var (
@@ -26,7 +27,8 @@ var (
 
 	humanDoraTiles string
 
-	port int
+	port    int
+	address string
 )
 
 func init() {
@@ -49,6 +51,7 @@ func init() {
 	flag.StringVar(&humanDoraTiles, "d", "", "同 -dora")
 	flag.IntVar(&port, "port", 12121, "指定服务端口")
 	flag.IntVar(&port, "p", 12121, "同 -port")
+	flag.StringVar(&address, "address", "127.0.0.1", "指定服务地址")
 }
 
 const (
@@ -140,9 +143,9 @@ func main() {
 	var err error
 	switch {
 	case isMajsoul:
-		err = runServer(true, port)
+		err = runServer(true, port, address)
 	case isTenhou || isAnalysis:
-		err = runServer(true, port)
+		err = runServer(true, port, address)
 	case isInteractive: // 交互模式
 		err = interact(humanTilesInfo)
 	case len(flag.Args()) > 0: // 静态分析
@@ -150,7 +153,7 @@ func main() {
 	default: // 服务器模式
 		choose := welcome()
 		isHTTPS := choose == platformMajsoul
-		err = runServer(isHTTPS, port)
+		err = runServer(isHTTPS, port, address)
 	}
 	if err != nil {
 		errorExit(err)
