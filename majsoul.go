@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/fatih/color"
-	"github.com/EndlessCheng/mahjong-helper/util"
-	"github.com/EndlessCheng/mahjong-helper/util/model"
 	"sort"
 	"time"
+
 	"github.com/EndlessCheng/mahjong-helper/platform/majsoul/proto/lq"
+	"github.com/EndlessCheng/mahjong-helper/util"
+	"github.com/EndlessCheng/mahjong-helper/util/model"
+	"github.com/fatih/color"
 )
 
 type majsoulMessage struct {
@@ -57,12 +58,13 @@ type majsoulMessage struct {
 
 	// ActionNewRound
 	// {"chang":0,"ju":0,"ben":0,"tiles":["1m","3m","7m","3p","6p","7p","6s","1z","1z","2z","3z","4z","7z"],"dora":"6m","scores":[25000,25000,25000,25000],"liqibang":0,"al":false,"md5":"","left_tile_count":69}
-	MD5   string      `json:"md5"`
-	Chang *int        `json:"chang"`
-	Ju    *int        `json:"ju"`
-	Ben   *int        `json:"ben"`
-	Tiles interface{} `json:"tiles"` // 一般情况下为 []interface{}, interface{} 即 string，但是暗杠的情况下，该值为一个 string
-	Dora  string      `json:"dora"`
+	SHA256 string      `json:"sha256"`
+	MD5    string      `json:"md5"`
+	Chang  *int        `json:"chang"`
+	Ju     *int        `json:"ju"`
+	Ben    *int        `json:"ben"`
+	Tiles  interface{} `json:"tiles"` // 一般情况下为 []interface{}, interface{} 即 string，但是暗杠的情况下，该值为一个 string
+	Dora   string      `json:"dora"`
 
 	// RecordNewRound
 	Tiles0 []string `json:"tiles0"`
@@ -285,7 +287,7 @@ func (d *majsoulRoundData) HandleLogin() {
 func (d *majsoulRoundData) IsInit() bool {
 	msg := d.msg
 	// ResAuthGame || ActionNewRound RecordNewRound
-	return msg.IsGameStart != nil || msg.MD5 != ""
+	return msg.IsGameStart != nil || msg.SHA256 != ""
 }
 
 func (d *majsoulRoundData) ParseInit() (roundNumber int, benNumber int, dealer int, doraIndicators []int, handTiles []int, numRedFives []int) {
