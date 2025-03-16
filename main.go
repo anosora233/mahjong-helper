@@ -51,7 +51,6 @@ func init() {
 	flag.StringVar(&humanDoraTiles, "d", "", "同 -dora")
 	flag.IntVar(&port, "port", 12121, "指定服务端口")
 	flag.IntVar(&port, "p", 12121, "同 -port")
-	flag.StringVar(&address, "address", "127.0.0.1", "指定服务地址")
 }
 
 const (
@@ -143,9 +142,9 @@ func main() {
 	var err error
 	switch {
 	case isMajsoul:
-		err = runServer(true, port, address)
+		err = runServer(true, port)
 	case isTenhou || isAnalysis:
-		err = runServer(true, port, address)
+		err = runServer(true, port)
 	case isInteractive: // 交互模式
 		err = interact(humanTilesInfo)
 	case len(flag.Args()) > 0: // 静态分析
@@ -153,7 +152,7 @@ func main() {
 	default: // 服务器模式
 		choose := welcome()
 		isHTTPS := choose == platformMajsoul
-		err = runServer(isHTTPS, port, address)
+		err = runServer(isHTTPS, port)
 	}
 	if err != nil {
 		errorExit(err)

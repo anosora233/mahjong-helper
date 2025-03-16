@@ -479,7 +479,7 @@ func getMajsoulCurrentRecordUUID() string {
 	return h.majsoulCurrentRecordUUID
 }
 
-func runServer(isHTTPS bool, port int, address string) (err error) {
+func runServer(isHTTPS bool, port int) (err error) {
 	e := echo.New()
 
 	// 移除 echo.Echo 和 http.Server 在控制台上打印的信息
@@ -531,7 +531,7 @@ func runServer(isHTTPS bool, port int, address string) (err error) {
 	if port == 0 {
 		port = defaultPort
 	}
-	addr := address + ":" + strconv.Itoa(port)
+	addr := "localhost:" + strconv.Itoa(port)
 	if !isHTTPS {
 		e.POST("/", h.analysisTenhou)
 		err = e.Start(addr)
